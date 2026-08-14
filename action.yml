@@ -1,0 +1,94 @@
+name: md2conf
+description: Publish a markdown directory to Confluence using mark
+author: alaksmana-mso
+
+inputs:
+  docs_path:
+    description: Path to the docs directory to publish
+    required: false
+    default: docs
+  mark_space:
+    description: Confluence space key
+    required: true
+  mark_parents:
+    description: Confluence parent page path
+    required: true
+  mark_password:
+    description: Atlassian API token (MARK_PASSWORD)
+    required: true
+  mark_username:
+    description: Atlassian account email
+    required: false
+    default: mso.andre.laksmana@bfi.co.id
+  mark_base_url:
+    description: Confluence base URL
+    required: false
+    default: https://bfifinance.atlassian.net/wiki/
+  mark_title_from_h1:
+    description: Use first H1 as page title
+    required: false
+    default: "true"
+  mark_drop_h1:
+    description: Drop H1 from page body
+    required: false
+    default: "true"
+  mark_mermaid_scale:
+    description: Mermaid render scale
+    required: false
+    default: "4"
+  mark_version:
+    description: kovetskiy/mark release tag to install when mark is missing
+    required: false
+    default: v16.9.1
+  project_prefix_url:
+    description: Base URL for source file links (defaults to this repo's blob URL)
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Install mark
+      shell: bash
+      env:
+        MARK_VERSION: ${{ inputs.mark_version }}
+      run: |
+        if command -v mark >/dev/null 2>&1; then
+          echo "mark already available: $(command -v mark)"
+          mark --version || true
+          exit 0
+        fi
+
+        arch="$(uname -m)"
+        case "$arch" in
+          x86_64) mark_arch=x86_64 ;;
+          aarch64|arm64) mark_arch=arm64 ;;
+          *)
+            echo "Unsupported architecture: $arch" >&2
+            exit 1
+            ;;
+        esac
+
+        curl -fsSL "https://github.com/kovetskiy/mark/releases/download/${MARK_VERSION}/mark_Linux_${mark_arch}.tar.gz" \
+          | sudo tar -xz -C /usr/local/bin mark
+        mark --version || true
+
+    - name: Publish docs to Confluence
+      shell: bash
+      env:
+        MARK_BASE_URL: ${{ inputs.mark_base_url }}
+        MARK_TITLE_FROM_H1: ${{ inputs.mark_title_from_h1 }}
+        MARK_DROP_H1: ${{ inputs.mark_drop_h1 }}
+        MARK_USERNAME: ${{ inputs.mark_username }}
+        MARK_PASSWORD: ${{ inputs.mark_password }}
+        MARK_MERMAID_SCALE: ${{ inputs.mark_mermaid_scale }}
+        MARK_SPACE: ${{ inputs.mark_space }}
+        MARK_PARENTS: ${{ inputs.mark_parents }}
+        PROJECT_PREFIX_URL: ${{ inputs.project_prefix_url }}
+        DOCS_PATH: ${{ inputs.docs_path }}
+      run: |
+        if [ -z "${PROJECT_PREFIX_URL}" ]; then
+          PROJECT_PREFIX_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}"
+        fi
+        export PROJECT_PREFIX_URL
+        "${GITHUB_ACTION_PATH}/md2conf.sh" "${DOCS_PATH}"

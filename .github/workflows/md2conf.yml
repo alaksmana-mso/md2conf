@@ -1,0 +1,22 @@
+name: md2conf
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  md2conf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish docs to Confluence
+        uses: ./
+        with:
+          # mark_space: DATA
+          mark_space: ~712020052f7b9360e3485597738b0dccd0b355
+          # mark_parents: Data/ChatBot
+          mark_parents: Test/md2conf
+          mark_password: ${{ secrets.MARK_PASSWORD }}
+          project_prefix_url: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}

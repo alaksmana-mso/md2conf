@@ -1,0 +1,73 @@
+name: Reusable md2conf
+
+# Call from another repository:
+#   jobs:
+#     docs:
+#       uses: alaksmana-mso/md2conf/.github/workflows/reusable-md2conf.yml@main
+#       with:
+#         mark_space: DATA
+#         mark_parents: Project/Docs
+#       secrets:
+#         MARK_PASSWORD: ${{ secrets.MARK_PASSWORD }}
+
+on:
+  workflow_call:
+    inputs:
+      docs_path:
+        description: Path to the docs directory to publish
+        type: string
+        required: false
+        default: docs
+      mark_space:
+        description: Confluence space key
+        type: string
+        required: true
+      mark_parents:
+        description: Confluence parent page path
+        type: string
+        required: true
+      mark_username:
+        description: Atlassian account email
+        type: string
+        required: false
+        default: mso.andre.laksmana@bfi.co.id
+      mark_base_url:
+        description: Confluence base URL
+        type: string
+        required: false
+        default: https://bfifinance.atlassian.net/wiki/
+      mark_version:
+        description: kovetskiy/mark release tag
+        type: string
+        required: false
+        default: v16.9.1
+    secrets:
+      MARK_PASSWORD:
+        description: Atlassian API token
+        required: true
+
+jobs:
+  md2conf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@v4
+
+      - name: Checkout md2conf action
+        uses: actions/checkout@v4
+        with:
+          repository: alaksmana-mso/md2conf
+          ref: ${{ github.workflow_sha }}
+          path: .md2conf
+
+      - name: Publish docs to Confluence
+        uses: ./.md2conf
+        with:
+          docs_path: ${{ inputs.docs_path }}
+          mark_space: ${{ inputs.mark_space }}
+          mark_parents: ${{ inputs.mark_parents }}
+          mark_username: ${{ inputs.mark_username }}
+          mark_base_url: ${{ inputs.mark_base_url }}
+          mark_version: ${{ inputs.mark_version }}
+          mark_password: ${{ secrets.MARK_PASSWORD }}
+          project_prefix_url: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}
