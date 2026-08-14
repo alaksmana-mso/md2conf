@@ -87,9 +87,11 @@ Because documentation serves different users; and these users have different way
 
 I don't want to inline shellscript in yaml. A composite action keeps `md2conf.sh` as a real file. This means I can use the script locally, `shellcheck` it, and iterate.
 
+### **If you use Atlassian classic token** 
 
+Add the Atlassian classic token as part of the repo secret variable **MARK_PASSWORD**.
 
-### **If you use Atlassian scoped token**
+### **If you use Atlassian scoped token (not recommended, last try did not work)**
 
 Create a **new** token with scopes (you can’t edit scopes later). For publishing docs with `mark` / `md2conf`, include at least:
 
@@ -114,7 +116,8 @@ Also useful if create-parent / content props fail:
 
 **Important with scoped tokens:**
 
-1. Base URL must be the platform form, not your site URL:  
+1. Base URL must be the platform form, not your site URL:
+
 `https://api.atlassian.com/ex/confluence/{cloudId}/wiki/`  
 (cloudId from e.g. `https://bfifinance.atlassian.net/_edge/tenant_info`)
 2. Still use Basic auth: email + token (same as now).
