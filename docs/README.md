@@ -10,7 +10,7 @@ To run locally, you need:
 ## Usage
 
 ```sh
-MARK_BASE_URL=https://bfifinance.atlassian.net/wiki/ MARK_SPACE=DATA MARK_PARENTS= MARK_USERNAME=mso.andre.laksmana@bfi.co.id MARK_PASSWORD=your-atlassian-password PROJECT_PREFIX_URL=https://github.com/alaksmana-mso/md2conf/blob/main ./md2conf.sh docs
+MARK_BASE_URL=https://bfifinance.atlassian.net/wiki/ MD2CONF_SPACE=DATA MD2CONF_PARENTS= MARK_USERNAME=mso.andre.laksmana@bfi.co.id MD2CONF_PASSWORD=your-atlassian-password PROJECT_PREFIX_URL=https://github.com/alaksmana-mso/md2conf/blob/main ./md2conf.sh docs
 ```
 
 Fyuh, what a load of envronment variables to pass. Alternative ways:
@@ -29,11 +29,11 @@ Per repository, configure:
 
 | Name | Where | Example |
 |------|--------|---------|
-| `MARK_PASSWORD` | **Secret** (Settings → Secrets and variables → Actions → Secrets) | Atlassian API token |
-| `MARK_SPACE` | **Variable** (Settings → Secrets and variables → Actions → Variables) | `DATA` or `~7120...` |
-| `MARK_PARENTS` | **Variable** | `LMS/lms-calculation-service` |
+| `MD2CONF_PASSWORD` | **Secret** (Settings → Secrets and variables → Actions → Secrets) | Atlassian API token |
+| `MD2CONF_SPACE` | **Variable** (Settings → Secrets and variables → Actions → Variables) | `DATA` or `~7120...` |
+| `MD2CONF_PARENTS` | **Variable** | `LMS/lms-calculation-service` |
 
-Use **Variables** for `MARK_SPACE` / `MARK_PARENTS` (not secrets) — they are not sensitive and are read via `${{ vars.MARK_* }}`.
+Use **Variables** for `MD2CONF_SPACE` / `MD2CONF_PARENTS` (not secrets) — they are not sensitive and are read via `${{ vars.MARK_* }}`.
 
 #### Other repositories (e.g. `bfi-finance/lms-calculation-service`)
 
@@ -58,9 +58,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: alaksmana-mso/md2conf@main
         with:
-          mark_space: ${{ vars.MARK_SPACE }}
-          mark_parents: ${{ vars.MARK_PARENTS }}
-          mark_password: ${{ secrets.MARK_PASSWORD }}
+          md2conf_space: ${{ vars.MD2CONF_SPACE }}
+          md2conf_parents: ${{ vars.MD2CONF_PARENTS }}
+          md2conf_password: ${{ secrets.MD2CONF_PASSWORD }}
 ```
 
 Or call the reusable workflow:
@@ -70,10 +70,10 @@ jobs:
   md2conf:
     uses: alaksmana-mso/md2conf/.github/workflows/reusable-md2conf.yml@main
     with:
-      mark_space: ${{ vars.MARK_SPACE }}
-      mark_parents: ${{ vars.MARK_PARENTS }}
+      md2conf_space: ${{ vars.MD2CONF_SPACE }}
+      md2conf_parents: ${{ vars.MD2CONF_PARENTS }}
     secrets:
-      MARK_PASSWORD: ${{ secrets.MARK_PASSWORD }}
+      MD2CONF_PASSWORD: ${{ secrets.MD2CONF_PASSWORD }}
 ```
 
 If `alaksmana-mso/md2conf` is private, grant the consumer repo access (org settings / Actions access), or publish the action from a shared org repo.
@@ -88,7 +88,7 @@ This tool wrap `mark` (well, wrapping means supeset, but this is more like a lim
 - Everything else is passed as environment variables. Read `mark` docs to read the args.
 - Parents will be added according to directory structure. Having your markdown in deep path, i.e. `some/deep/path/doc.md` will yield the same structure in Confluence.
 - If you provide the `PROJECT_PREFIX_URL`, link to the source file will be appended to the top of the docs.
-- `README.md` are written into `MARK_PARENTS`.
+- `README.md` are written into `MD2CONF_PARENTS`.
 
 
 
@@ -112,7 +112,7 @@ I don't want to inline shellscript in yaml. A composite action keeps `md2conf.sh
 
 ### **If you use Atlassian classic token** 
 
-Add the Atlassian classic token as part of the repo secret variable **MARK_PASSWORD**.
+Add the Atlassian classic token as part of the repo secret variable **MD2CONF_PASSWORD**.
 
 ### **If you use Atlassian scoped token (not recommended, last try did not work)**
 

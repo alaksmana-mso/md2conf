@@ -16,7 +16,7 @@ jobs:
       - name: Publish docs to Confluence
         uses: ./
         with:
-          mark_space: ${{ vars.MARK_SPACE }}
-          mark_parents: ${{ vars.MARK_PARENTS }}
-          mark_password: ${{ secrets.MARK_PASSWORD }}
+          md2conf_space: ${{ vars.MD2CONF_SPACE }}
+          md2conf_parents: ${{ vars.MD2CONF_PARENTS }}
+          md2conf_password: ${{ secrets.MD2CONF_PASSWORD }}
           project_prefix_url: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}
