@@ -23,37 +23,60 @@ Reference `.env` and `mise.toml` are included in this repo for you to look at.
 
 ### Use from pipeline
 
-See this project `[.github/workflows/md2conf.yml](/.github/workflows/md2conf.yml)`.
+See this project [`.github/workflows/md2conf.yml`](/.github/workflows/md2conf.yml).
 
-**Composite action** (any repo):
+Per repository, configure:
+
+| Name | Where | Example |
+|------|--------|---------|
+| `MARK_PASSWORD` | **Secret** (Settings → Secrets and variables → Actions → Secrets) | Atlassian API token |
+| `MARK_SPACE` | **Variable** (Settings → Secrets and variables → Actions → Variables) | `DATA` or `~7120...` |
+| `MARK_PARENTS` | **Variable** | `LMS/lms-calculation-service` |
+
+Use **Variables** for `MARK_SPACE` / `MARK_PARENTS` (not secrets) — they are not sensitive and are read via `${{ vars.MARK_* }}`.
+
+#### Other repositories (e.g. `bfi-finance/lms-calculation-service`)
+
+1. Add a `docs/` folder with your markdown.
+2. Set the three Actions settings above on that repo (or at org level).
+3. Add `.github/workflows/md2conf.yml`:
 
 ```yaml
+name: md2conf
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
 jobs:
-  docs:
+  md2conf:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: alaksmana-mso/md2conf@main
         with:
-          mark_space: DATA
-          mark_parents: Project/Docs
+          mark_space: ${{ vars.MARK_SPACE }}
+          mark_parents: ${{ vars.MARK_PARENTS }}
           mark_password: ${{ secrets.MARK_PASSWORD }}
 ```
 
-**Reusable workflow**:
+Or call the reusable workflow:
 
 ```yaml
 jobs:
-  docs:
+  md2conf:
     uses: alaksmana-mso/md2conf/.github/workflows/reusable-md2conf.yml@main
     with:
-      mark_space: DATA
-      mark_parents: Project/Docs
+      mark_space: ${{ vars.MARK_SPACE }}
+      mark_parents: ${{ vars.MARK_PARENTS }}
     secrets:
       MARK_PASSWORD: ${{ secrets.MARK_PASSWORD }}
 ```
 
-Store your Atlassian API token as the repository secret `MARK_PASSWORD`.
+If `alaksmana-mso/md2conf` is private, grant the consumer repo access (org settings / Actions access), or publish the action from a shared org repo.
 
 See this repository resulting [Confluence](https://bfifinance.atlassian.net/wiki/spaces/~6315ab813310c2492b5b0e4e/pages/3982098450/md2conf).
 

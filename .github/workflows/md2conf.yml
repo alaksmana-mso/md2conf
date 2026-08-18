@@ -16,9 +16,7 @@ jobs:
       - name: Publish docs to Confluence
         uses: ./
         with:
-          # mark_space: DATA
-          mark_space: ~712020052f7b9360e3485597738b0dccd0b355
-          # mark_parents: Data/ChatBot
-          mark_parents: Test/md2conf
+          mark_space: ${{ vars.MARK_SPACE }}
+          mark_parents: ${{ vars.MARK_PARENTS }}
           mark_password: ${{ secrets.MARK_PASSWORD }}
           project_prefix_url: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}

@@ -1,12 +1,12 @@
 name: Reusable md2conf
 
-# Call from another repository:
+# Call from another repository (values from that repo's Variables/Secrets):
 #   jobs:
 #     docs:
 #       uses: alaksmana-mso/md2conf/.github/workflows/reusable-md2conf.yml@main
 #       with:
-#         mark_space: DATA
-#         mark_parents: Project/Docs
+#         mark_space: ${{ vars.MARK_SPACE }}
+#         mark_parents: ${{ vars.MARK_PARENTS }}
 #       secrets:
 #         MARK_PASSWORD: ${{ secrets.MARK_PASSWORD }}
 
