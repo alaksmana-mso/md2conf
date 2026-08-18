@@ -78,7 +78,7 @@ jobs:
 
 If `alaksmana-mso/md2conf` is private, grant the consumer repo access (org settings / Actions access), or publish the action from a shared org repo.
 
-See this repository resulting [Confluence](https://bfifinance.atlassian.net/wiki/spaces/~6315ab813310c2492b5b0e4e/pages/3982098450/md2conf).
+See this repository resulting [Confluence](https://bfifinance.atlassian.net/wiki/spaces/~712020052f7b9360e3485597738b0dccd0b355/pages/2670493762/Service+Discovery).
 
 ## About
 
