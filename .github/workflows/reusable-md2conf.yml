@@ -5,10 +5,10 @@ name: Reusable md2conf
 #     docs:
 #       uses: alaksmana-mso/md2conf/.github/workflows/reusable-md2conf.yml@main
 #       with:
-#         md2conf_space: ${{ vars.MD2CONF_SPACE }}
-#         md2conf_parents: ${{ vars.MD2CONF_PARENTS }}
+#         mark_space: ${{ vars.MARK_SPACE }}
+#         mark_parents: ${{ vars.MARK_PARENTS }}
 #       secrets:
-#         MD2CONF_PASSWORD: ${{ secrets.MD2CONF_PASSWORD }}
+#         MARK_PASSWORD: ${{ secrets.MARK_PASSWORD }}
 
 on:
   workflow_call:
@@ -18,11 +18,11 @@ on:
         type: string
         required: false
         default: docs
-      md2conf_space:
+      mark_space:
         description: Confluence space key
         type: string
         required: true
-      md2conf_parents:
+      mark_parents:
         description: Confluence parent page path
         type: string
         required: true
@@ -42,7 +42,7 @@ on:
         required: false
         default: v16.9.1
     secrets:
-      MD2CONF_PASSWORD:
+      MARK_PASSWORD:
         description: Atlassian API token
         required: true
 
@@ -64,10 +64,10 @@ jobs:
         uses: ./.md2conf
         with:
           docs_path: ${{ inputs.docs_path }}
-          md2conf_space: ${{ inputs.md2conf_space }}
-          md2conf_parents: ${{ inputs.md2conf_parents }}
+          mark_space: ${{ inputs.mark_space }}
+          mark_parents: ${{ inputs.mark_parents }}
           mark_username: ${{ inputs.mark_username }}
           mark_base_url: ${{ inputs.mark_base_url }}
           mark_version: ${{ inputs.mark_version }}
-          md2conf_password: ${{ secrets.MD2CONF_PASSWORD }}
+          mark_password: ${{ secrets.MARK_PASSWORD }}
           project_prefix_url: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}

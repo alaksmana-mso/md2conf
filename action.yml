@@ -7,14 +7,14 @@ inputs:
     description: Path to the docs directory to publish
     required: false
     default: docs
-  md2conf_space:
+  mark_space:
     description: Confluence space key
     required: true
-  md2conf_parents:
+  mark_parents:
     description: Confluence parent page path
     required: true
-  md2conf_password:
-    description: Atlassian API token (MD2CONF_PASSWORD)
+  mark_password:
+    description: Atlassian API token (MARK_PASSWORD)
     required: true
   mark_username:
     description: Atlassian account email
@@ -80,10 +80,10 @@ runs:
         MARK_TITLE_FROM_H1: ${{ inputs.mark_title_from_h1 }}
         MARK_DROP_H1: ${{ inputs.mark_drop_h1 }}
         MARK_USERNAME: ${{ inputs.mark_username }}
-        MD2CONF_PASSWORD: ${{ inputs.md2conf_password }}
+        MARK_PASSWORD: ${{ inputs.mark_password }}
         MARK_MERMAID_SCALE: ${{ inputs.mark_mermaid_scale }}
-        MD2CONF_SPACE: ${{ inputs.md2conf_space }}
-        MD2CONF_PARENTS: ${{ inputs.md2conf_parents }}
+        MARK_SPACE: ${{ inputs.mark_space }}
+        MARK_PARENTS: ${{ inputs.mark_parents }}
         PROJECT_PREFIX_URL: ${{ inputs.project_prefix_url }}
         DOCS_PATH: ${{ inputs.docs_path }}
       run: |
